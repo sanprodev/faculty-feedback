@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route, Switch } from 'react-router-dom';
+
+import AppHeader from './components/AppHeader/AppHeader.Component';
+import LoginPage from './pages/auth/login/login.page';
+import RegisterPage from './pages/auth/register/register.page';
+import HomePage from './pages/home/home.page';
+import AuthProvider, { AuthContext } from './pages/auth/auth.page';
+
+import PrivateRoute from './PrivateRoute';
+
 import './App.css';
 
-function App() {
+const App = () => {
+  const currentUser = React.useContext(AuthContext);
+  console.log('currentUSer in App', currentUser);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <AuthProvider>
+        { currentUser ? <AppHeader /> : null }
+        <Switch>
+          <PrivateRoute path="/" component={HomePage} exact />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/register" component={RegisterPage} />
+        </Switch>
+      </AuthProvider>
     </div>
-  );
+  )
 }
 
 export default App;
