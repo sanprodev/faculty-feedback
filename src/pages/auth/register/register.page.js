@@ -23,13 +23,14 @@ class RegisterPage extends React.Component {
     event.preventDefault();
   
     try {
-      const user = await register({...this.state});
       this.setState({
         name: '',
         studentId: '',
         email: '',
         password: ''
       });
+
+      await register({...this.state});
       this.props.history.push('/');
     }
     catch(error) {

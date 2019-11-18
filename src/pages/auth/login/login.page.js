@@ -27,9 +27,11 @@ class LoginPage extends React.Component {
     const { email, password } = this.state;
 
     try {
-      const user = await login(email, password);
       this.setState({ email: '', password: '' });
-      this.props.history.push('/');
+      const user = await login(email, password);
+  
+      if(user.email === "admin@gmail.com") return this.props.history.push('/admin');
+      return this.props.history.push('/');
     }
     catch (error) {
       console.log('Error', error.message);
@@ -49,7 +51,11 @@ class LoginPage extends React.Component {
     return (
       <>
         {currentUser ? (
-          <Redirect to="/" />
+          currentUser.email === "admin@gmail.com" ? (
+            <Redirect to="/admin" />
+          ) : (
+            <Redirect to="/" />
+          )
         ) : (
           <div className="login-page">
             <div className="container">

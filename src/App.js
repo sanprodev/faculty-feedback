@@ -6,6 +6,7 @@ import LoginPage from './pages/auth/login/login.page';
 import RegisterPage from './pages/auth/register/register.page';
 import HomePage from './pages/home/home.page';
 import AuthProvider, { AuthContext } from './pages/auth/auth.page';
+import AdminPage from './pages/admin/admin.page';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -20,9 +21,11 @@ const App = () => {
       <AuthProvider>
         { currentUser ? <AppHeader /> : null }
         <Switch>
-          <PrivateRoute path="/" component={HomePage} exact />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
+  
+          <PrivateRoute path="/" component={HomePage} exact />
+          <PrivateRoute path="/admin" component={AdminPage} roles={['admin']} />
         </Switch>
       </AuthProvider>
     </div>
