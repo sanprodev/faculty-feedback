@@ -2,7 +2,7 @@ import React from 'react';
 
 import './AppInputField.Styles.scss';
 
-const FormInput = ({handleOnChange, lable, ...otherProps}) => {
+const AppInputField = ({handleOnChange, lable, ...otherProps}) => {
   return (
     <div className="input-group">
       { lable ?  <lable>Email</lable> : null }
@@ -11,4 +11,4 @@ const FormInput = ({handleOnChange, lable, ...otherProps}) => {
   )
 }
 
-export default FormInput;
+export default AppInputField;

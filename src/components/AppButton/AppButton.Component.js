@@ -2,9 +2,13 @@ import React from 'react';
 
 import './AppButton.Styles.scss';
 
-const AppButton = ({children, ...otherProps}) => {
+const AppButton = ({children, handleOnClick, ...otherProps}) => {
   return (
-    <button className="ripple" {...otherProps}>
+    <button
+      className="ripple"
+      {...otherProps}
+      onClick={handleOnClick}
+    >
       { children }
     </button>
   )

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-import AppInputFiled from '../../../components/AppForm/AppInputField/AppInputField.Component'
 import AppButton from '../../../components/AppButton/AppButton.Component';
+import AppInputFiled from '../../../components/AppForm/AppInputField/AppInputField.Component';
 
 import './login.styles.scss';
 
@@ -27,8 +27,9 @@ class LoginPage extends React.Component {
     const { email, password } = this.state;
 
     try {
-      this.setState({ email: '', password: '' });
       const user = await login(email, password);
+
+      this.setState({ email: '', password: '' });
   
       if(user.email === "admin@gmail.com") return this.props.history.push('/admin');
       return this.props.history.push('/');

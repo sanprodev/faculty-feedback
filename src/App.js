@@ -10,7 +10,7 @@ import AdminPage from './pages/admin/admin.page';
 
 import PrivateRoute from './PrivateRoute';
 
-import './App.css';
+import './App.scss';
 
 const App = () => {
   const currentUser = React.useContext(AuthContext);

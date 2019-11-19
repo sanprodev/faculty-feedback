@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-import AppInputFiled from '../../../components/AppForm/AppInputField/AppInputField.Component'
 import AppButton from '../../../components/AppButton/AppButton.Component';
+import AppInputFiled from '../../../components/AppForm/AppInputField/AppInputField.Component';
+import AppSelectField from '../../../components/AppForm/AppSelectField/AppSelectField.Component';
 
 import './register.styles.scss';
 
@@ -15,6 +16,8 @@ class RegisterPage extends React.Component {
   state = {
     name: '',
     studentId: '',
+    department: "",
+    semester: "",
     email: '',
     password: ''
   }
@@ -23,14 +26,16 @@ class RegisterPage extends React.Component {
     event.preventDefault();
   
     try {
+      await register({...this.state});
+
       this.setState({
         name: '',
         studentId: '',
+        department: '',
+        semester: '',
         email: '',
         password: ''
       });
-
-      await register({...this.state});
       this.props.history.push('/');
     }
     catch(error) {
@@ -72,6 +77,20 @@ class RegisterPage extends React.Component {
                   name="studentId"
                   placeholder="Student Id"
                   value={studentId}
+                  handleOnChange={this.handleOnChange}
+                />
+                <AppSelectField
+                  type="text"
+                  name="department"
+                  placeholder="Department"
+                  options={["MCA"]}
+                  handleOnChange={this.handleOnChange}
+                />
+                <AppSelectField
+                  type="text"
+                  name="semester"
+                  placeholder="Semester"
+                  options={[1, 2, 3, 4, 5, 6]}
                   handleOnChange={this.handleOnChange}
                 />
                 <AppInputFiled
