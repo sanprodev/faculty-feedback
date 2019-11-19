@@ -14,13 +14,13 @@ import 'firebase/auth';
 // }
 
 const config = {
-  apiKey: "AIzaSyDyn-84dkkTf2tihyJWGzW7cn0CwQkeQTU",
-  authDomain: "faculty-feedback-f10dc.firebaseapp.com",
-  databaseURL: "https://faculty-feedback-f10dc.firebaseio.com",
-  projectId: "faculty-feedback-f10dc",
-  storageBucket: "faculty-feedback-f10dc.appspot.com",
-  messagingSenderId: "637502235258",
-  appId: "1:637502235258:web:a22cb7e97dce82238491c3"
+  apiKey: "AIzaSyAytsN3HQTx3xtWGSesKZUZHhpukuEtkxg",
+  authDomain: "facultyfeedback-e33c5.firebaseapp.com",
+  databaseURL: "https://facultyfeedback-e33c5.firebaseio.com",
+  projectId: "facultyfeedback-e33c5",
+  storageBucket: "facultyfeedback-e33c5.appspot.com",
+  messagingSenderId: "571665659391",
+  appId: "1:571665659391:web:a1b509915b1e476492e3ca"
 }
 
 firebase.initializeApp(config);
