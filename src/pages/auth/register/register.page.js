@@ -16,10 +16,11 @@ class RegisterPage extends React.Component {
   state = {
     name: '',
     studentId: '',
-    department: "",
-    semester: "",
+    department: '',
+    semester: '',
     email: '',
-    password: ''
+    password: '',
+    error: '',
   }
 
   handleFormSubmit = async (event) => {
@@ -40,6 +41,7 @@ class RegisterPage extends React.Component {
     }
     catch(error) {
       console.log('Error', error.message);
+      this.setState({ error: error.message });
     }
   }
 
@@ -49,9 +51,18 @@ class RegisterPage extends React.Component {
     this.setState({ [name]: value });
   }
 
+  componentDidUpdate() {
+    const { error } = this.state;
+    if(error) {
+      setTimeout(() => {
+        this.setState({ error: '' });
+      }, 4000);
+    }
+  }
+
   render() {
     const currentUser = this.context;
-    const { name, studentId, email, password } = this.state;
+    const { name, studentId, email, password, error } = this.state;
 
     return (
       <>
@@ -59,6 +70,11 @@ class RegisterPage extends React.Component {
           <Redirect to="/" />
         ) : (
           <div className="register-page">
+            { error ? (
+              <div className="error">
+                { error }
+              </div>
+            ) : null}
             <div className="container">
               <div className="title">
                 Please Register

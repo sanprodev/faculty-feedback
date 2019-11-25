@@ -17,7 +17,8 @@ class LoginPage extends React.Component {
 
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      error: '',
     }
   }
 
@@ -36,6 +37,7 @@ class LoginPage extends React.Component {
     }
     catch (error) {
       console.log('Error', error.message);
+      this.setState({ error: error.message });
     }
   }
 
@@ -45,8 +47,17 @@ class LoginPage extends React.Component {
     this.setState({ [name]: value });
   }
 
+  componentDidUpdate() {
+    const { error } = this.state;
+    if(error) {
+      setTimeout(() => {
+        this.setState({ error: '' });
+      }, 4000);
+    }
+  }
+
   render() {
-    const { email, password } = this.state;
+    const { email, password, error } = this.state;
     const currentUser = this.context;
 
     return (
@@ -59,6 +70,11 @@ class LoginPage extends React.Component {
           )
         ) : (
           <div className="login-page">
+            { error ? (
+              <div className="error">
+                { error }
+              </div>
+            ) : null}
             <div className="container">
               <div className="title">
                 Please Login
