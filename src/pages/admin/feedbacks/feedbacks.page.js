@@ -39,7 +39,6 @@ class FeedbacksPage extends React.Component {
     try {
       const feedbacks = await getFeedbacksByFaculty(faculty);
       this.setState({
-        faculty: faculty.faculty,
         feedbacks: feedbacks,
       });
     } 
@@ -49,14 +48,8 @@ class FeedbacksPage extends React.Component {
   }
 
   render() {
-    const {
-      faculty,
-      feedbacks,
-      showDetails,
-      feedbackDetails,
-    } = this.state;
-    console.log('feedbacks', feedbacks);
-    console.log('feedbackDetails', feedbackDetails);
+    const { faculty } = this.props.location.state;
+    const { feedbacks, showDetails, feedbackDetails } = this.state;
 
     return (
       <div className="feedbacks-page page-container">
@@ -66,8 +59,12 @@ class FeedbacksPage extends React.Component {
           ) : (
             <div className="back" onClick={this.handleOnClickBack}>Back</div>
           )}
-          Fedbacks of {faculty}
+          Fedbacks of {faculty.faculty}
         </div>
+
+        { feedbacks.length === 0 ? (
+          <div className="no-feedbacks">No Feedbacks</div>
+        ) : null }
 
         { !showDetails ? (
           feedbacks.map((feedback, index) => {
