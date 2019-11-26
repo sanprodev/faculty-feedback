@@ -2,10 +2,10 @@ import React from 'react';
 
 import './AppInputField.Styles.scss';
 
-const AppInputField = ({handleOnChange, lable, ...otherProps}) => {
+const AppInputField = ({handleOnChange, label, ...otherProps}) => {
   return (
     <div className="input-group">
-      { lable ?  <lable>Email</lable> : null }
+      { label ?  <label>Email</label> : null }
       <input onChange={handleOnChange} {...otherProps} />
     </div>
   )

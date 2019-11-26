@@ -1,15 +1,29 @@
 import React from 'react';
-
-import './admin.styles.scss';
-
+// components
 import AppButton from '../../components/AppButton/AppButton.Component';
 import AppInputField from '../../components/AppForm/AppInputField/AppInputField.Component';
 import AppSelectField from '../../components/AppForm/AppSelectField/AppSelectField.Component';
+// styles
+import './admin.styles.scss';
+// firebase helper
+import { addNewFaculty, getFaculties } from '../../firebase/faculty.firebase';
 
 class AdminPage extends React.Component {
   state = {
     viewFeedback: true,
-    addFaculty: false
+    addFaculty: false,
+    newFaculty: {
+      name: '',
+      department: '',
+      designation: '',
+      qualification: '',
+      specialization: '',
+    },
+    selectedFaculty: {
+      department: '',
+      faculty: '',
+    },
+    faculties: []
   }
 
   viewFeedback = () => {
@@ -25,21 +39,66 @@ class AdminPage extends React.Component {
       addFaculty: true
     });
   }
- 
+
   handleOnSubmitViewFeedback = (event) => {
-    event.preventDefault()
+    event.preventDefault();
+    const { selectedFaculty } = this.state;
+    const { department, faculty } = selectedFaculty;
+
+    if(department !== '' || faculty !== '') {
+      this.props.history.push({
+        pathname: '/feedbacks',
+        state: { faculty: selectedFaculty }
+      });
+    }
   }
 
-  handleOnSubmitAddFaculty = (event) => {
-    event.preventDefault()
+  handleOnSubmitAddFaculty = async (event) => {
+    event.preventDefault();
+    const { newFaculty } = this.state;
+
+    try {
+      const response = await addNewFaculty(newFaculty);
+      console.log('response', response);
+    }
+    catch (error) {
+      console.log('Error', error.message);
+    }
   }
 
-  handleOnChange = () => {
-    console.log('on change');
+  handleOnChangeSelectFaculty = (event) => {
+    const { value, name } = event.target;
+    const selectedFaculty = {...this.state.selectedFaculty}
+    selectedFaculty[name] = value;
+
+    this.setState({ selectedFaculty });
+  }
+
+  handleOnChangeAddFaculty = (event) => {
+    const { value, name } = event.target;
+    const newFaculty = {...this.state.newFaculty}
+    newFaculty[name] = value;
+
+    this.setState({ newFaculty });
+  }
+
+  async componentDidMount() {
+    try {
+      const faculties = await getFaculties();
+      this.setState({ faculties });
+    }
+    catch(error) {
+      console.log('Error', error.message);
+    }
   }
 
   render() {
-    const { viewFeedback, addFaculty } = this.state;
+    const {
+      viewFeedback, 
+      addFaculty,
+      newFaculty,
+      faculties,
+    } = this.state;
 
     return (
       <div className="admin-page page-container">
@@ -69,14 +128,14 @@ class AdminPage extends React.Component {
                 name="department"
                 placeholder="Department"
                 options={["MCA"]}
-                handleOnChange={this.handleOnChange}
+                handleOnChange={this.handleOnChangeSelectFaculty}
               />
               <AppSelectField
                 type="text"
                 name="faculty"
                 placeholder="Faculty"
-                options={["Rajesh", "Naveen", "Reshma"]}
-                handleOnChange={this.handleOnChange}
+                options={faculties.map(faculty => faculty.name)}
+                handleOnChange={this.handleOnChangeSelectFaculty}
               />
 
               <AppButton type="submit" value="Submit">Submit</AppButton>
@@ -87,41 +146,41 @@ class AdminPage extends React.Component {
         {addFaculty ? (
           <div className="add-faculty">
             <div className="page-title">Please fill the form to add a faculty</div>
-            <form onSubmit={this.handleOnSubmitViewFeedback}>
+            <form onSubmit={this.handleOnSubmitAddFaculty}>
               <AppInputField
                 type="text"
                 name="name"
                 placeholder="Name"
-                value=""
-                handleOnChange={this.handleOnChange}
+                value={newFaculty.name}
+                handleOnChange={this.handleOnChangeAddFaculty}
               />
               <AppSelectField
                 type="text"
                 name="department"
                 placeholder="Department"
                 options={["MCA"]}
-                handleOnChange={this.handleOnChange}
+                handleOnChange={this.handleOnChangeAddFaculty}
               />
               <AppSelectField
                 type="text"
                 name="designation"
                 placeholder="Designation"
                 options={["Assistant Professor", "Professor"]}
-                handleOnChange={this.handleOnChange}
+                handleOnChange={this.handleOnChangeAddFaculty}
               />
               <AppInputField
                 type="text"
                 name="qualification"
                 placeholder="Qualification"
-                value=""
-                handleOnChange={this.handleOnChange}
+                value={newFaculty.qualification}
+                handleOnChange={this.handleOnChangeAddFaculty}
               />
               <AppInputField
                 type="text"
                 name="specialization"
                 placeholder="Specialization"
-                value=""
-                handleOnChange={this.handleOnChange}
+                value={newFaculty.specialization}
+                handleOnChange={this.handleOnChangeAddFaculty}
               />
 
               <AppButton type="submit" value="Submit">Submit</AppButton>

@@ -7,6 +7,7 @@ import RegisterPage from './pages/auth/register/register.page';
 import HomePage from './pages/home/home.page';
 import AuthProvider, { AuthContext } from './pages/auth/auth.page';
 import AdminPage from './pages/admin/admin.page';
+import FeedbacksPage from './pages/admin/feedbacks/feedbacks.page';
 
 import PrivateRoute from './PrivateRoute';
 
@@ -26,6 +27,7 @@ const App = () => {
   
           <PrivateRoute path="/" component={HomePage} exact />
           <PrivateRoute path="/admin" component={AdminPage} roles={['admin']} />
+          <PrivateRoute path="/feedbacks" component={FeedbacksPage} roles={['admin']} />
         </Switch>
       </AuthProvider>
     </div>
