@@ -23,7 +23,8 @@ class AdminPage extends React.Component {
       department: '',
       faculty: '',
     },
-    faculties: []
+    faculties: [],
+    requestSuccess: false,
   }
 
   viewFeedback = () => {
@@ -60,6 +61,17 @@ class AdminPage extends React.Component {
     try {
       const response = await addNewFaculty(newFaculty);
       console.log('response', response);
+      this.setState(prevState => ({
+        ...prevState,
+        requestSuccess: true,
+        newFaculty: {
+          name: '',
+          department: '',
+          designation: '',
+          qualification: '',
+          specialization: '',
+        },
+      }));
     }
     catch (error) {
       console.log('Error', error.message);
@@ -92,16 +104,32 @@ class AdminPage extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    const { requestSuccess } = this.state;
+    if(requestSuccess) {
+      setTimeout(() => {
+        this.setState({ requestSuccess: false });
+      }, 4000);
+    }
+  }
+
   render() {
     const {
       viewFeedback, 
       addFaculty,
       newFaculty,
       faculties,
+      requestSuccess,
     } = this.state;
 
     return (
       <div className="admin-page page-container">
+        { requestSuccess ? (
+          <div className="success">
+            Faculty Added Successfully
+          </div>
+        ): null }
+
         <div className="actions">
           <AppButton
             type="button"
@@ -159,6 +187,7 @@ class AdminPage extends React.Component {
                 name="department"
                 placeholder="Department"
                 options={["MCA"]}
+                value={newFaculty.department}
                 handleOnChange={this.handleOnChangeAddFaculty}
               />
               <AppSelectField
@@ -166,6 +195,7 @@ class AdminPage extends React.Component {
                 name="designation"
                 placeholder="Designation"
                 options={["Assistant Professor", "Professor"]}
+                value={newFaculty.designation}
                 handleOnChange={this.handleOnChangeAddFaculty}
               />
               <AppInputField
@@ -183,7 +213,9 @@ class AdminPage extends React.Component {
                 handleOnChange={this.handleOnChangeAddFaculty}
               />
 
-              <AppButton type="submit" value="Submit">Submit</AppButton>
+              <AppButton type="submit" value="Submit">
+                { !requestSuccess ? "Submit" : "Processing....." }
+              </AppButton>
             </form>
           </div>
         ) : null }

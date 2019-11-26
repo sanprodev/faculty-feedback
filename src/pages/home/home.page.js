@@ -34,6 +34,7 @@ class HomePage extends React.Component {
     },
     user: {},
     faculties: [],
+    requestSuccess: false,
   }
 
   handleFormSubmit = async (event) => {
@@ -41,9 +42,28 @@ class HomePage extends React.Component {
     const { feedback, user } = this.state;
 
     try {
-      const response = await addNewFeedback(feedback, user);
-      console.log('response', response);
-      // this.setState({ feedback });
+      await addNewFeedback(feedback, user);
+      this.setState(prevState => ({
+        ...prevState,
+        requestSuccess: true,
+        feedback: {
+          department: '',
+          faculty: '',
+          subject: '',
+          comment: '',
+          passion: '',
+          subjectKnowledge: '',
+          clarityAndEmphasis: '',
+          motivational: '',
+          creatingIntrest: '',
+          qualityOfIllustrative: '',
+          punctuality: '',
+          disipline: '',
+          promotingStudent: '',
+          encouraging: '',
+          overallRating: '',
+        }
+      }));
     }
     catch (error) {
       console.log('Error', error.message);
@@ -70,8 +90,17 @@ class HomePage extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    const { requestSuccess } = this.state;
+    if(requestSuccess) {
+      setTimeout(() => {
+        this.setState({ requestSuccess: false });
+      }, 4000);
+    }
+  }
+
   render() {
-    const { feedback, faculties } = this.state;
+    const { feedback, faculties, requestSuccess } = this.state;
     const { department, faculty, subject, comment } = feedback;
 
     return (
@@ -80,6 +109,12 @@ class HomePage extends React.Component {
           <p>Provid Feedback</p>
         </div>
   
+        { requestSuccess ? (
+          <div className="success">
+            Feedback Submit
+          </div>
+        ): null }
+
         <form className="feedback-form" onSubmit={this.handleFormSubmit}>
           <AppSelectField
             type="text"
@@ -190,7 +225,9 @@ class HomePage extends React.Component {
             style={{display: 'block'}}
           />
 
-          <AppButton type="submit" value="Submit">Submit</AppButton>
+          <AppButton type="submit" value="Submit">
+            { !requestSuccess ? "Submit" : "Processing....." }
+          </AppButton>
         </form>
       </div>
     )
