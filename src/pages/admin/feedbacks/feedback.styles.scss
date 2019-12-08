@@ -38,6 +38,16 @@
   .feedback-details {
     margin-top: 30px;
 
+    .overall-rating {
+      color: #00BFA5;
+      border: 2px solid #00BFA5;
+      padding: 12px;
+      margin: 40px auto;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
     p {
       color: #bbb;
       font-weight: 600;

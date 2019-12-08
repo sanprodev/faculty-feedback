@@ -38,6 +38,8 @@ class FeedbacksPage extends React.Component {
 
     try {
       const feedbacks = await getFeedbacksByFaculty(faculty);
+      console.log('feedbacks', feedbacks);
+      
       this.setState({
         feedbacks: feedbacks,
       });
@@ -92,10 +94,10 @@ class FeedbacksPage extends React.Component {
           })
         ) : (
           <div className="feedback-details">
-            <p>
+            {/* <p>
               Student ID:
               <span>{feedbackDetails.user.studentId}</span>
-            </p>
+            </p> */}
             <p>
               Department:
               <span>{feedbackDetails.department}</span>
@@ -148,9 +150,8 @@ class FeedbacksPage extends React.Component {
               Encouraging and student interaction:
               <span>{feedbackDetails.encouraging}</span>
             </p>
-            <p>
-              Overall Rating:
-              <span>{feedbackDetails.overallRating}</span>
+            <p className="overall-rating">
+              {feedbackDetails.overallRating}
             </p>
           </div>
         )}
