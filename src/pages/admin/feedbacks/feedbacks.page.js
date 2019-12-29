@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // components
 import AppButton from '../../../components/AppButton/AppButton.Component';
 // firebase helper
-import { getFeedbacksByFaculty } from '../../../firebase/feedback.firebase';
+import { getFeedbacksByFacultySubject, getFacultyFeedbackAverage } from '../../../firebase/feedback.firebase';
 
 import './feedback.styles.scss';
 
@@ -19,6 +19,22 @@ class FeedbacksPage extends React.Component {
     }
   }
 
+  async componentDidMount() {
+    const { faculty } = this.props.location.state;
+
+    try {
+      const feedbacks = await getFeedbacksByFacultySubject(faculty);
+      console.log('feedbacks', feedbacks);
+      
+      this.setState({
+        feedbacks: feedbacks,
+      });
+    } 
+    catch (error) {
+      console.log('Error', error.message);
+    }
+  }
+
   handleOnClickBack = () => {
     this.setState({
       showDetails: false,
@@ -26,23 +42,15 @@ class FeedbacksPage extends React.Component {
     });
   }
 
-  handleOnClickViewDetails = (details) => {
-    this.setState({
-      showDetails: true,
-      feedbackDetails: details,
-    })
-  }
-
-  async componentDidMount() {
-    const { faculty } = this.props.location.state;
-
+  handleOnClickViewDetails = async (subject) => {
     try {
-      const feedbacks = await getFeedbacksByFaculty(faculty);
-      console.log('feedbacks', feedbacks);
-      
+      const details = await getFacultyFeedbackAverage(subject);
+      console.log('details', details);
+
       this.setState({
-        feedbacks: feedbacks,
-      });
+        showDetails: true,
+        feedbackDetails: details,
+      })
     } 
     catch (error) {
       console.log('Error', error.message);
@@ -73,18 +81,18 @@ class FeedbacksPage extends React.Component {
             return (
               <div key={`${feedback.faculty}-${index}`} className="feedback">
                 <div className="name">
-                  <p>Student ID</p>
-                  { feedback.user.studentId }
+                  <p>Subject</p>
+                  { feedback.subject }
                 </div>
-                <div className="ratings">
+                {/* <div className="ratings">
                   <p>Overall Rating</p>
                   { feedback.overallRating }
-                </div>
+                </div> */}
 
                 <div className="details">
                   <AppButton
                     type="button"
-                    handleOnClick={() => this.handleOnClickViewDetails(feedback)}
+                    handleOnClick={() => this.handleOnClickViewDetails(feedback.subject)}
                   >
                     View Details
                   </AppButton>
@@ -106,52 +114,52 @@ class FeedbacksPage extends React.Component {
               Subject:
               <span>{feedbackDetails.subject}</span>
             </p>
-            <p>
+            {/* <p>
               Comment:
               <span>{feedbackDetails.comment}</span>
-            </p>
+            </p> */}
             <p>
               Passion and enthusiasm to teach:
-              <span>{feedbackDetails.passion}</span>
+              <span>{parseInt(feedbackDetails.passion)/5}</span>
             </p>
             <p>
               Subject Knowledge:
-              <span>{feedbackDetails.subjectKnowledge}</span>
+              <span>{parseInt(feedbackDetails.subjectKnowledge)/5}</span>
             </p>
             <p>
               Clarity and emphasis on concept:
-              <span>{feedbackDetails.clarityAndEmphasis}</span>
+              <span>{parseInt(feedbackDetails.clarityAndEmphasis)/5}</span>
             </p>
             <p>
               Motivational and inspiring students:
-              <span>{feedbackDetails.motivational}</span>
+              <span>{parseInt(feedbackDetails.motivational)/5}</span>
             </p>
             <p>
               Creating interest in subject:
-              <span>{feedbackDetails.creatingIntrest}</span>
+              <span>{parseInt(feedbackDetails.creatingIntrest)/5}</span>
             </p>
             <p>
               Quality illustrative examples and applications:
-              <span>{feedbackDetails.qualityOfIllustrative}</span>
+              <span>{parseInt(feedbackDetails.qualityOfIllustrative)/5}</span>
             </p>
             <p>
               Punctuality and uniform coverage of syllabus:
-              <span>{feedbackDetails.punctuality}</span>
+              <span>{parseInt(feedbackDetails.punctuality)/5}</span>
             </p>
             <p>
               Discipline and control in the class:
-              <span>{feedbackDetails.disipline}</span>
+              <span>{parseInt(feedbackDetails.disipline)/5}</span>
             </p>
             <p>
               Promoting student thinking:
-              <span>{feedbackDetails.promotingStudent}</span>
+              <span>{parseInt(feedbackDetails.promotingStudent)/5}</span>
             </p>
             <p>
               Encouraging and student interaction:
-              <span>{feedbackDetails.encouraging}</span>
+              <span>{parseInt(feedbackDetails.encouraging)/5}</span>
             </p>
             <p className="overall-rating">
-              {feedbackDetails.overallRating}
+              Overall Rating: {parseInt(feedbackDetails.overallRating)/5}
             </p>
           </div>
         )}

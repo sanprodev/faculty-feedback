@@ -35,11 +35,15 @@ class HomePage extends React.Component {
     user: {},
     faculties: [],
     requestSuccess: false,
+    requestFailure: false,
   }
 
   handleFormSubmit = async (event) => {
     event.preventDefault();
     const { feedback, user } = this.state;
+
+    const isFormValid = this.isFormValid();
+    if(!isFormValid) return this.setState({ requestFailure: true });
 
     try {
       await addNewFeedback(feedback, user);
@@ -78,6 +82,31 @@ class HomePage extends React.Component {
     this.setState({ feedback });
   }
 
+  isFormValid = () => {
+    const {feedback} = this.state;
+
+    if(
+        !feedback.department ||
+        !feedback.faculty ||
+        !feedback.subject ||
+        !feedback.comment ||
+        !feedback.passion ||
+        !feedback.subjectKnowledge ||
+        !feedback.clarityAndEmphasis ||
+        !feedback.motivational ||
+        !feedback.creatingIntrest ||
+        !feedback.qualityOfIllustrative ||
+        !feedback.punctuality ||
+        !feedback.disipline ||
+        !feedback.promotingStudent ||
+        !feedback.encouraging ||
+        !feedback.overallRating
+    ) {
+      return false;
+    }
+    return true;
+  }
+
   async componentDidMount() {
     try {
       const faculties = await getFaculties();
@@ -91,16 +120,16 @@ class HomePage extends React.Component {
   }
 
   componentDidUpdate() {
-    const { requestSuccess } = this.state;
-    if(requestSuccess) {
+    const { requestSuccess, requestFailure } = this.state;
+    if(requestSuccess || requestFailure) {
       setTimeout(() => {
-        this.setState({ requestSuccess: false });
-      }, 4000);
+        this.setState({ requestSuccess: false, requestFailure: false });
+      }, 3000);
     }
   }
 
   render() {
-    const { feedback, faculties, requestSuccess } = this.state;
+    const { feedback, faculties, requestSuccess, requestFailure } = this.state;
     const { department, faculty, subject, comment } = feedback;
 
     return (
@@ -112,6 +141,12 @@ class HomePage extends React.Component {
         { requestSuccess ? (
           <div className="success">
             Feedback Submit
+          </div>
+        ): null }
+
+        { requestFailure ? (
+          <div className="error">
+            Please fill all fields
           </div>
         ): null }
 
@@ -217,12 +252,18 @@ class HomePage extends React.Component {
             handleOnChange={this.handleOnChange}
           />
           <AppRadioButtonGroup
+            block
             name="overallRating"
             placeholder="Overall Rating"
             label="Overall Rating"
-            values={['Excellent', 'Very Good', 'Average', 'Satisfactory', 'Poor']}
+            values={[
+              { label: "Excellent", value: 1 },
+              { label: "Very Good", value: 2 },
+              { label: "Average", value: 3 },
+              { label: "Satisfactory", value: 4 },
+              { label: "Poor", value: 5 },
+            ]}
             handleOnChange={this.handleOnChange}
-            style={{display: 'block'}}
           />
 
           <AppButton type="submit" value="Submit">
